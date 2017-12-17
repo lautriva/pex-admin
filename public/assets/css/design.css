@@ -1,0 +1,23 @@
+#content
+{    
+    padding: 20px;
+    padding-top: 0px;
+}
+
+.with-tooltip
+{
+	cursor: help;
+}
+
+.chat-preview
+{
+    color:#eee;
+    font-family: consolas;
+    background: #777;
+    padding: 3px;
+    border-radius:5px;
+}
+
+.select2-results__option[aria-selected=true] {
+    display: none;
+}

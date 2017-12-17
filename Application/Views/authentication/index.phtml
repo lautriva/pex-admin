@@ -1,0 +1,34 @@
+<div class="center-block" style="width: 377px;">
+    <h1>
+        PEX<b>Admin</b>
+    </h1>
+    <div>
+        <p>
+            Sign in to start your session
+            <?php if (!empty($this->loginError)) { ?>
+                <br/><b class="text-warning"><?= $this->loginError ?></b>
+            <?php } ?>
+        </p>
+        <form action="" method="post">
+        	<?php
+        	   $form = new PexAdmin_Form();
+
+        	   echo $form->getInput(
+	               'login',
+    	           'text',
+    	           ['placeholder' => 'Login']
+	           );
+
+           	   echo $form->getInput(
+	               'password',
+    	           'password',
+    	           ['placeholder' => 'Password']
+	           );
+
+           	   echo $form->getSubmitButton(
+	               'Connect'
+	           );
+        	?>
+        </form>
+    </div>
+</div>

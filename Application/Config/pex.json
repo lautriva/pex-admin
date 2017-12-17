@@ -1,0 +1,32 @@
+{
+	"application" :
+	{
+		"table_aliases" :
+		{
+			"permissions": "permissions",
+			"permissions_entity": "permissions_entity",
+			"permissions_inheritance": "permissions_inheritance"
+		}
+	},
+	"plugins": ["PexAdmin_Plugins_Authentication"],
+    "router" :
+    {
+        "error" :
+        {
+            "controller" : "error",
+            "action" : "error"
+        }
+    },
+    "namespaces":
+    {
+        "Model_Generated": "/Models/Generated",
+        "Model": "/Models",
+        "PexAdmin": "/Library/PexAdmin"
+    },
+    "view" : {
+        "mainLayout" : "layout/main.phtml"
+    },
+    "helpers" : {
+        "toolbar" : "Helper_Toolbar"
+    }
+}

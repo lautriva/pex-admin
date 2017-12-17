@@ -1,0 +1,48 @@
+<?php
+    $form = new PexAdmin_Form();
+?>
+<link rel="stylesheet" href="/assets/lib/datatables/dataTables.bootstrap.css">
+
+<div id="groups-table-container">
+    <table id="groups-table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Entity name</th>
+                <th>Entity Type</th>
+                <th>Permissions count</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Entity name</th>
+                <th>Entity Type</th>
+                <th>Permissions count</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script src="/assets/lib/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/lib/datatables/dataTables.bootstrap.min.js"></script>
+
+<script>
+$(function() {
+    $('#groups-table').on('init.dt', function(e, settings, json) {
+        $('#groups-table-container select').select2({
+            theme: "bootstrap"
+        });
+    }).DataTable({
+      "paging": true,
+      "pageLength": 25,
+      "ordering": true,
+      "orderMulti": false,
+      "searching": true,
+      "responsive": true,
+      "processing": true,
+      "serverSide": true,
+      "ajax": "/permissions/list"
+    });
+});
+</script>

@@ -1,0 +1,267 @@
+<?php
+    $form = new PexAdmin_Form();
+
+    /** @var Model_PermissionsEntity $oGroup */
+    $oGroup = $this->oGroup;
+    $parents = $this->parents;
+
+    $isCreate = empty($oGroup->getId());
+
+    $requiredStar = '<span class="text-danger">*</span>';
+
+    $parents = (!$isCreate && isset($this->parents[$oGroup->getName()]))
+        ? $this->parents[$oGroup->getName()]
+        : []
+    ;
+
+    $options = $oGroup->getOptions();
+
+    $optionIdentifier = 0;
+
+    $canCreate = PexAdmin_Acl::isAllowed('GROUP', 'CREATE');
+    $canEdit = PexAdmin_Acl::isAllowed('GROUP', 'UPDATE');
+    $canDelete = PexAdmin_Acl::isAllowed('GROUP', 'DELETE');
+?>
+<form method="post">
+    <?php
+        echo $form->getInput('name', 'text', [
+            'caption' => 'Group name'.($isCreate ? $requiredStar : ''),
+            'value' => $oGroup->getName(),
+            'readonly' => !$isCreate,
+            'required' => $isCreate
+        ]);
+
+        $parentsOptions = array();
+        foreach ($parents as $parent)
+        {
+            $parentsOptions[] = [
+                'value' => $parent,
+                'caption' => $parent,
+                'selected' => 'selected'
+            ];
+        }
+
+        echo $form->getAjaxSelect(
+            'parents',
+            '/groups/list-ajax',
+            $parentsOptions,
+            array(
+                'name' => 'parents[]',
+                'multiple' => 'multiple',
+                'caption' => 'Inherit permissions from these groups',
+                'placeholder' => 'Select one or more group',
+                'disabled' => !$canEdit
+            )
+        );
+    ?>
+
+	<hr/>
+	<h4>Options</h4>
+    <div id="options">
+	<?php foreach ($options as $worldName => $worldData)
+	{
+       foreach ($worldData as $optionName => $optionValue)
+       { ?>
+    		<div class="input-group">
+        		<span class="input-group-addon">
+        			<?= $form->getInput('options['.$optionIdentifier.'][name]', 'text', [
+                        'placeholder' => 'Option name',
+                        'value' => $optionName,
+                        'readonly' => !$canEdit
+                    ]); ?>
+                </span>
+        		<span class="input-group-addon">
+        			<?= $form->getInput('options['.$optionIdentifier.'][value]', 'text', [
+                        'placeholder' => 'Option value',
+                        'value' => $optionValue,
+                        'readonly' => !$canEdit
+                    ]); ?>
+                </span>
+        		<span class="input-group-addon">
+        			<?= $form->getInput('options['.$optionIdentifier.'][world]', 'text', [
+                        'placeholder' => 'World (leave blank for global)',
+                        'value' => $worldName,
+    			        'readonly' => !$canEdit
+                    ]); ?>
+                </span>
+                <?php if ($canEdit) { ?>
+                <span class="input-group-addon">
+                    <button type="button" class="btn btn-default remove-option" aria-label="Remove">
+                    	<span class="fa fa-trash fa-lg" aria-hidden="true"></span>
+                    </button>
+                </span>
+                <?php } ?>
+            </div>
+        	<?php
+        	$optionIdentifier++;
+        }
+    }
+    ?>
+    </div>
+
+	<br/>
+
+    <?= ($canEdit)
+        ? $form->getButton(
+            'Add one more',
+            'addOption()',
+            array(
+                'class' => 'btn-default'
+            )
+        )
+        : ''
+    ?>
+
+    <br/>
+
+    <br/>
+
+    <div class="box-footer">
+        <?php
+
+        if ($canEdit)
+        {
+            echo $form->getSubmitButton(
+                'Save',
+                array(
+                    'class' => 'btn-primary'
+                )
+            );
+        }
+
+        if (!$isCreate)
+        {
+            if ($canCreate)
+            {
+                echo ' ';
+                echo $form->getButton(
+                    'Clone',
+                    'duplicate()',
+                    array(
+                        'class' => 'btn-success',
+                    )
+                );
+            }
+
+            echo ' <img class="loader" style="display:none" src="/assets/img/loader.gif"/>';
+
+            echo $form->getButton(
+                'Go to group permissions',
+                'window.location = "/permissions/edit/'.urlencode($oGroup->getName()).'/0"',
+                array(
+                    'class' => 'btn-secondary',
+                )
+            );
+
+            if ($canDelete)
+            {
+                echo $form->getButton(
+                    'Remove',
+                    'remove()',
+                    array(
+                        'class' => 'btn-danger pull-right',
+                    )
+                );
+            }
+        }
+        ?>
+    </div>
+</form>
+
+<?php if ($canEdit) { ?>
+<script>
+	var optionPrototype = `
+		<div class="input-group">
+    		<span class="input-group-addon">
+    			<?= $form->getInput('options[__OPTION_ID__][name]', 'text', [
+                    'placeholder' => 'Option name',
+                    'value' => ''
+                ]); ?>
+            </span>
+    		<span class="input-group-addon">
+    			<?= $form->getInput('options[__OPTION_ID__][value]', 'text', [
+                    'placeholder' => 'Option value',
+                    'value' => '',
+                    'required' => true
+                ]); ?>
+            </span>
+    		<span class="input-group-addon">
+    			<?= $form->getInput('options[__OPTION_ID__][world]', 'text', [
+                    'placeholder' => 'World (leave blank for global)',
+                    'value' => ''
+                ]); ?>
+            </span>
+            <span class="input-group-addon">
+                <button type="button" class="btn btn-default remove-option" aria-label="Remove">
+                	<span class="fa fa-trash fa-lg" aria-hidden="true"></span>
+                </button>
+            </span>
+        </div>
+	`;
+
+	var optionId = <?= $optionIdentifier ?>;
+
+	$('.remove-option').click(function() {
+		$(this).parent().parent().remove();
+	});
+
+	function addOption()
+	{
+		var optionContent = optionPrototype.replace(/__OPTION_ID__/g, optionId);
+
+		optionId++;
+
+		$('#options').append(optionContent);
+
+		$('.remove-option').click(function() {
+			$(this).parent().parent().remove();
+		});
+	}
+
+	function remove()
+	{
+		if (confirm('Are you sure you want to delete this group ?'))
+		{
+			$('.loader').show();
+			$.post('/groups/delete/',
+			{
+				name: $('#name').val()
+			},
+			function (data) {
+				if (data == '')
+					document.location = '/groups/';
+				else
+				{
+					alert(data);
+					$('.loader').hide();
+				}
+			});
+		}
+	}
+
+	function duplicate()
+	{
+	    var name = prompt("Please enter the cloned group name", $('#name').val() + '_copy');
+
+        if (name != null && name!='')
+        {
+        	$('.loader').show();
+
+			$.post('/groups/clone/',
+			{
+				name: $('#name').val(),
+				newName: name
+			},
+			function (data) {
+				if (data == '')
+					document.location = '/groups/edit/'+name;
+				else
+				{
+					alert(data);
+					$('.loader').hide();
+				}
+			});
+        }
+	}
+</script>
+<?php } ?>

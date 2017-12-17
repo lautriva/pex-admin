@@ -1,0 +1,62 @@
+<?php
+    $form = new PexAdmin_Form();
+?>
+<link rel="stylesheet" href="/assets/lib/datatables/dataTables.bootstrap.css">
+
+<div id="players-table-container">
+    <table id="players-table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Player UUID</th>
+                <th>Global options</th>
+                <th>Assigned groups</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Player UUID</th>
+                <th>Global options</th>
+                <th>Assigned groups</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<?php
+
+if (PexAdmin_Acl::isAllowed('PLAYER', 'CREATE'))
+{
+    echo $form->getButton(
+        'Add a new player',
+        'window.location = "/players/edit/"',
+        ['class' => 'btn-primary']
+    );
+}
+?>
+
+<script src="/assets/lib/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/lib/datatables/dataTables.bootstrap.min.js"></script>
+
+<script>
+$(function() {
+    $('#players-table').on('init.dt', function(e, settings, json) {
+        $('#players-table-container select').select2({
+            theme: "bootstrap"
+        });
+    }).DataTable({
+      "paging": true,
+      "pageLength": 25,
+      "ordering": true,
+      "searching": true,
+      "responsive": true,
+      "processing": true,
+      "serverSide": true,
+      "ajax": "/players/list",
+      "columnDefs": [
+        { "orderable": false, "targets": [1, 2] }
+      ]
+    });
+});
+</script>

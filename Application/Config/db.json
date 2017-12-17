@@ -1,0 +1,7 @@
+{
+    "default": {
+        "dsn": "mysql:host=localhost;dbname=test_pex;charset=utf8",
+        "user": "root",
+        "password": ""
+    }
+}

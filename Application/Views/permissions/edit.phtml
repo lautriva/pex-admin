@@ -1,0 +1,184 @@
+<?php
+    $form = new PexAdmin_Form();
+
+    /** @var Model_PermissionsEntity $oEntity */
+    $oEntity = $this->oEntity;
+    $parents = $this->parents;
+    $permissions = $this->permissions;
+
+    $requiredStar = '<span class="text-danger">*</span>';
+
+    $parents = (isset($this->parents[$oEntity->getName()]))
+        ? $this->parents[$oEntity->getName()]
+        : []
+    ;
+
+    $permissionIdentifier = 0;
+
+    $isPlayer = $oEntity->getType() == Model_Permission::TYPE_PLAYER;
+
+    $entityNameCaption = $isPlayer
+        ? 'Player UUID'
+        : 'Group name'
+    ;
+
+    $canEdit = PexAdmin_Acl::isAllowed('PERMISSION', 'UPDATE');
+?>
+<form method="post">
+    <?php
+        if ($isPlayer && !empty($oEntity->getOptions()['']['name']))
+        {
+            echo $form->getInput('name', 'text', [
+                'caption' => 'Player name',
+                'value' => $oEntity->getOptions()['']['name'],
+                'readonly' => true
+            ]);
+        }
+
+        echo $form->getInput('entity', 'text', [
+            'caption' => $entityNameCaption,
+            'value' => $oEntity->getName(),
+            'readonly' => true
+        ]);
+    ?>
+
+   	<?php
+        if (count($parents) > 0)
+        {
+            echo 'Parent groups: ';
+       	    $parentsDisp = [];
+
+            foreach ($parents as $parent)
+            {
+                $parentsDisp[] = '<a href="/groups/edit/'.$parent.'">'.$parent.'</a>';
+            }
+
+            echo implode(', ', $parentsDisp);
+            echo '<br/>';
+        }
+    ?>
+
+	<hr/>
+	<h4>Permissions</h4>
+
+    <div id="permissions">
+	<?php foreach ($permissions as $worldName => $worldData)
+	{
+       foreach ($worldData as $permissionName)
+       { ?>
+    		<div class="input-group">
+        		<span class="input-group-addon">
+        			<?= $form->getInput('permissions['.$permissionIdentifier.'][node]', 'text', [
+                        'placeholder' => 'Permission node',
+                        'value' => $permissionName,
+                        'readonly' => !$canEdit
+                    ]); ?>
+                </span>
+        		<span class="input-group-addon">
+        			<?= $form->getInput('permissions['.$permissionIdentifier.'][world]', 'text', [
+                        'placeholder' => 'World (leave blank for global)',
+                        'value' => $worldName,
+                        'readonly' => !$canEdit
+                    ]); ?>
+                </span>
+                <?php if ($canEdit) { ?>
+                <span class="input-group-addon">
+                    <button type="button" class="btn btn-default remove-permission" aria-label="Remove">
+                    	<span class="fa fa-trash fa-lg" aria-hidden="true"></span>
+                    </button>
+                </span>
+                <?php } ?>
+            </div>
+        	<?php
+        	$permissionIdentifier++;
+        }
+    }
+    ?>
+    </div>
+
+	<br/>
+
+    <?php
+    if ($canEdit)
+    {
+        echo $form->getButton(
+            'Add one permission',
+            'addPermission()',
+            array(
+                'class' => 'btn-default'
+            )
+        );
+
+        echo '<br/><br/>';
+    }
+
+    ?>
+    <div class="box-footer">
+	<?php
+    if ($canEdit)
+    {
+        echo $form->getSubmitButton(
+            'Save',
+            array(
+                'class' => 'btn-primary'
+            )
+        );
+    }
+
+    echo ' ';
+
+    echo $form->getButton(
+        'Go to entity options',
+        'window.location = "/'.($isPlayer ? 'players' : 'groups').'/edit/'.urlencode($oEntity->getName()).'"',
+        array(
+            'class' => 'btn-secondary',
+        )
+    );
+    ?>
+    </div>
+</form>
+
+<?php if ($canEdit) { ?>
+<script>
+	var permissionPrototype = `
+		<div class="input-group">
+    		<span class="input-group-addon">
+    			<?= $form->getInput('permissions[__OPTION_ID__][node]', 'text', [
+                    'placeholder' => 'Permission name',
+                    'value' => ''
+                ]); ?>
+            </span>
+    		<span class="input-group-addon">
+    			<?= $form->getInput('permissions[__OPTION_ID__][world]', 'text', [
+                    'placeholder' => 'World (leave blank for global)',
+                    'value' => ''
+                ]); ?>
+            </span>
+            <span class="input-group-addon">
+                <button type="button" class="btn btn-default remove-permission" aria-label="Remove">
+                	<span class="fa fa-trash fa-lg" aria-hidden="true"></span>
+                </button>
+            </span>
+        </div>
+	`;
+
+	var permissionId = <?= $permissionIdentifier ?>;
+
+	$('.remove-permission').click(function() {
+		$(this).parent().parent().remove();
+	});
+
+	function addPermission()
+	{
+		var permissionContent = permissionPrototype.replace(/__OPTION_ID__/g, permissionId);
+
+		permissionId++;
+
+		$('#permissions').append(permissionContent);
+
+		$('.remove-permission').click(function() {
+			$(this).parent().parent().remove();
+		});
+	}
+</script>
+<?php } ?>

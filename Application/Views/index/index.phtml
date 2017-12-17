@@ -1,0 +1,50 @@
+<hr/>
+<?php
+$groups = $this->pexData;
+
+foreach ($groups as $group) {
+    $isPlayer = $group['type'] == Model_Permission::TYPE_PLAYER;
+
+    $icon = $isPlayer
+        ? '<span class="fa fa-fw fa-user"></span>'
+        : '<span class="fa fa-fw fa-users"></span>'
+    ;
+
+    $link = $isPlayer
+        ? '/players/edit/'.urlencode($group['id']).'/1'
+        : '/groups/edit/'.urlencode($group['name']).'/0'
+    ;
+
+?>
+    <div class="row">
+    <div class="col-md-12"><h3>
+    <a title="View options" href="<?= $link ?>"><?= $icon ?> <?= $group['name'] ?></a>
+	<?php
+	if ($isPlayer && isset($group['uuid']))
+        echo ' <span class="text-muted" style="font-size:0.7em;">('.$group['uuid'].')</span>';
+
+	if (!empty($group['render']))
+        echo ' <span class="text-muted" style="font-size:0.7em;">Chat preview: <span class="chat-preview">'.$group['render'].'</span></span>';
+
+    if (!empty($group['rank']))
+        echo ' <span class="text-muted" style="font-size:0.9em;">#' . $group['rank'] .
+        (isset($group['rank-ladder']) ? ' <span style="font-size:0.7em;">(ladder: '.$group['rank-ladder'].')</span>' : '') .
+        '</span>';
+    ?>
+    </h3></div>
+    <?php foreach ($group['permissions'] as $permissionData) { ?>
+    	<div class="col-md-4 col-sm-6 col-xs-12">
+    		<?= $permissionData['node'] ?>
+            <?php if (!empty($permissionData['world'])) {
+                $hashColor = strrev(substr(md5($permissionData['world']), 0, 6));
+            ?>
+        	<span class="text-muted" style="font-size:0.9em;color:#<?= $hashColor ?>">
+                <?= $permissionData['world'] ?>
+        	</span>
+            <?php } else {
+                echo '<span class="text-success" style="font-size:0.9em;">Global</span>';
+            } ?>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>

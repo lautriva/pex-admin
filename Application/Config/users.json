@@ -1,0 +1,12 @@
+{
+	"demo":
+	{
+		"password": "89e495e7941cf9e40e6980d14a16bf023ccd4c91",
+		"role": "read"
+	},
+	"admin":
+	{
+		"password": "d033e22ae348aeb5660fc2140aec35850c4da997",
+		"role": "write"
+	}
+}

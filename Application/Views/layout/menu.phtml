@@ -1,0 +1,32 @@
+<?php
+    $identity = Oxygen_Auth::getIdentity();
+    $login = $identity['login'];
+?>
+<nav class="navbar navbar-default navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">PEXAdmin</a>
+            </div>
+            <ul class="nav navbar-nav">
+            <?= $this->toolbar(array(
+                'groups' => array(
+                    'title' => 'Groups',
+                    'link' => '/groups'
+                ),
+                "players" => array(
+                    'title' => 'Players',
+                    'link' => '/players'
+                ),
+                "permissions" => array(
+                    'title' => 'Permissions',
+                    'link' => '/permissions'
+                ),
+                "logout" => array(
+                    'title' => 'Logout ['.ucfirst($login).']',
+                    'link' => '/authentication/logout'
+                ),
+            ), $this->toolbarCurrent)
+            ?>
+        </ul>
+    </div>
+</nav>

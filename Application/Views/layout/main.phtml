@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PermissionsEx Administration</title>
+
+        <link rel="stylesheet" type="text/css" href="/assets/lib/font-awesome/css/font-awesome.min.css">
+
+        <link rel="stylesheet" type="text/css" href="/assets/lib/bootstrap/css/bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="/assets/lib/select2/select2.min.css">
+        <link rel="stylesheet" type="text/css" href="/assets/lib/select2/select2-bootstrap.min.css">
+
+        <link rel="stylesheet" type="text/css" href="/assets/lib/switchery/switchery.css">
+        <link rel="stylesheet" type="text/css" href="/assets/css/design.css">
+
+        <script src="/assets/lib/jquery.js"></script>
+    </head>
+    <body>
+    	<?= Oxygen_Auth::getIdentity()
+    	   ? $this->partial('layout/menu.phtml', ['toolbarCurrent' => $this->toolbarCurrent])
+    	   : ''
+    	?>
+
+        <div id="content">
+            <?= !empty($this->title) ? '<h2>'.$this->title.'</h2>' : '' ?>
+            <?= $this->_content ?>
+        </div>
+
+        <script type="text/javascript" src="/assets/lib/bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/assets/lib/select2/select2.min.js"></script>
+        <script type="text/javascript" src="/assets/lib/switchery/switchery.js"></script>
+    </body>
+</html>

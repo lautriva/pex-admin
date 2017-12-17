@@ -1,0 +1,62 @@
+<?php
+    $form = new PexAdmin_Form();
+?>
+<link rel="stylesheet" href="/assets/lib/datatables/dataTables.bootstrap.css">
+
+<div id="groups-table-container">
+    <table id="groups-table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Group</th>
+                <th>Global options</th>
+                <th>Inherits from groups</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Group</th>
+                <th>Global options</th>
+                <th>Inherits from groups</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<?php
+
+if (PexAdmin_Acl::isAllowed('GROUP', 'CREATE'))
+{
+    echo $form->getButton(
+        'Add a new group',
+        'window.location = "/groups/edit/"',
+        ['class' => 'btn-primary']
+    );
+}
+?>
+
+<script src="/assets/lib/datatables/jquery.dataTables.min.js"></script>
+<script src="/assets/lib/datatables/dataTables.bootstrap.min.js"></script>
+
+<script>
+$(function() {
+    $('#groups-table').on('init.dt', function(e, settings, json) {
+        $('#groups-table-container select').select2({
+            theme: "bootstrap"
+        });
+    }).DataTable({
+      "paging": true,
+      "pageLength": 25,
+      "ordering": true,
+      "searching": true,
+      "responsive": true,
+      "processing": true,
+      "serverSide": true,
+      "ajax": "/groups/list",
+      "columnDefs": [
+        { "orderable": false, "targets": [1, 2] }
+      ]
+    });
+});
+</script>
