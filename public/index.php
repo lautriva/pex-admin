@@ -1,7 +1,7 @@
 <?php
 
 // Load Oxygen Framework
-define('FRAMEWORK_DIR', __DIR__ . '/../../Oxygen_Framework');
+define('FRAMEWORK_DIR', __DIR__ . '/../Oxygen_Framework');
 require FRAMEWORK_DIR . '/Project.php';
 
 // Define where are all application files (Models, views, controllers...)
