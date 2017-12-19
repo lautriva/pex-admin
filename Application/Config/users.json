@@ -8,5 +8,11 @@
 	{
 		"password": "d033e22ae348aeb5660fc2140aec35850c4da997",
 		"role": "write"
+	},
+	"admin2":
+	{
+		"password": "$2y$10$iqiefC9ER6Ifw/jnOEs8ser1ETQCZ0KDCs/ylVFPnGK.OA749WDqa",
+		"role": "write",
+		"hashType": "bcrypt"
 	}
 }

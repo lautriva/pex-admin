@@ -16,7 +16,7 @@ class AuthenticationController extends Controller
                 $paramPassword = $_POST['password'];
 
                 $username = strtolower($paramLogin);
-                $password = sha1($paramPassword);
+                $password = $paramPassword;
 
                 $userList = (new Config())->loadFromJSONFile(APPLICATION_DIR.'/Config/users.json');
 
@@ -24,11 +24,33 @@ class AuthenticationController extends Controller
 
                 if (!empty($checkedUser) && !empty($checkedUser['password']))
                 {
-                    if ($password === $checkedUser['password'])
-                        $user = $checkedUser;
+                    if (empty($checkedUser['hashType']))
+                        $checkedUser['hashType'] = 'sha1';
 
-                    $user['login'] = $username;
-                    unset($user['password']);
+                    $allowAccess = false;
+
+                    switch ($checkedUser['hashType'])
+                    {
+                        case 'clear':
+                            $allowAccess = ($password === $checkedUser['password']);
+                        break;
+
+                        case 'bcrypt':
+                            $allowAccess = password_verify($password, $checkedUser['password']);
+                        break;
+
+                        default:
+                            $allowAccess = (sha1($password) === $checkedUser['password']);
+                        break;
+
+                    }
+
+                    if ($allowAccess)
+                    {
+                        $user = $checkedUser;
+                        $user['login'] = $username;
+                        unset($user['password']);
+                    }
                 }
             }
 
