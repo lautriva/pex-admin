@@ -21,20 +21,20 @@ foreach ($groups as $group) {
     <a title="View options" href="<?= $link ?>"><?= $icon ?> <?= $group['name'] ?></a>
 	<?php
 	if ($isPlayer && isset($group['uuid']))
-        echo ' <span class="text-muted" style="font-size:0.7em;">('.$group['uuid'].')</span>';
+        echo ' <span class="text-muted" style="font-size:0.7em;">('.htmlentities($group['uuid']).')</span>';
 
 	if (!empty($group['render']))
         echo ' <span class="text-muted" style="font-size:0.7em;">Chat preview: <span class="chat-preview">'.$group['render'].'</span></span>';
 
     if (!empty($group['rank']))
-        echo ' <span class="text-muted" style="font-size:0.9em;">#' . $group['rank'] .
+        echo ' <span class="text-muted" style="font-size:0.9em;">#' . htmlentities($group['rank']) .
         (isset($group['rank-ladder']) ? ' <span style="font-size:0.7em;">(ladder: '.$group['rank-ladder'].')</span>' : '') .
         '</span>';
     ?>
     </h3></div>
     <?php foreach ($group['permissions'] as $permissionData) { ?>
     	<div class="col-md-4 col-sm-6 col-xs-12">
-    		<?= $permissionData['node'] ?>
+    		<?= htmlentities($permissionData['node']) ?>
             <?php if (!empty($permissionData['world'])) {
                 $hashColor = strrev(substr(md5($permissionData['world']), 0, 6));
             ?>
