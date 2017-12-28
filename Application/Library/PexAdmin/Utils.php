@@ -1,6 +1,34 @@
 <?php
 class PexAdmin_Utils
 {
+    /**
+     * Check if application is configured properly and all data is available
+     * @param string $message
+     * @return boolean
+     *      true: if all is ok
+     *      false: an error occured, more info is put in $message var
+     */
+    public static function checkState(&$message = null)
+    {
+        $result = true;
+        $message = 'No error';
+
+        try
+        {
+            // Run fake requests
+            Model_Permission::getPermissions('test', Model_Permission::TYPE_GROUP);
+            Model_PermissionsEntity::getEntitiesByType(Model_Permission::TYPE_GROUP);
+            Model_PermissionsInheritance::getGroupsParents();
+        }
+        catch (Exception $e)
+        {
+            $result = false;
+            $message = $e->getMessage();
+        }
+
+        return $result;
+    }
+
     // Adapted from http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-tools/1264944
     public static function convertMinetextToWeb($minetext)
     {

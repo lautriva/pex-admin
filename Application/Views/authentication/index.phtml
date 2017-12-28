@@ -3,6 +3,9 @@
         PEX<b>Admin</b>
     </h1>
     <div>
+        <?php if (!empty($this->serverError)) { ?>
+            <p class="alert alert-danger"><?= $this->serverError ?></p>
+        <?php } else { ?>
         <p>
             Sign in to start your session
             <?php if (!empty($this->loginError)) { ?>
@@ -30,5 +33,6 @@
 	           );
         	?>
         </form>
+        <?php } ?>
     </div>
 </div>

@@ -6,6 +6,16 @@ class AuthenticationController extends Controller
         if (Oxygen_Auth::getIdentity())
             Oxygen_Utils::redirect('/');
 
+        if (!PexAdmin_Utils::checkState($error))
+        {
+            // in production, don't tell details
+            if (!Oxygen_Utils::isDev())
+                $error = 'Internal error occured';
+
+            $this->view->serverError = $error;
+            return;
+        }
+
         if ($this->getRequest()->isPost())
         {
             $user = null;
