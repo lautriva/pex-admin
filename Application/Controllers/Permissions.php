@@ -83,7 +83,7 @@ class PermissionsController extends Controller
 
         $queryData = array(
             'from' => $entityTableName,
-            'other' => 'GROUP BY '.$nameEntityField,
+            'other' => 'GROUP BY '.$nameEntityField.','.$typeEntityField,
             'join' => [['type' => 'left', 'table' => $permissionsTableName, 'on' => $nameEntityField.' = '.$nameEntityPermissionField]]
         );
 
