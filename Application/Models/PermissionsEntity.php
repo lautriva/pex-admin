@@ -73,7 +73,7 @@ class Model_PermissionsEntity extends Model_Generated_PermissionsEntity
             $res->execute();
 
             // Remove inheritances
-            $res = $db->prepare('DELETE FROM `'.$inheritancesTable.'` WHERE parent = :name OR child = :name');
+            $res = $db->prepare('DELETE FROM `'.$inheritancesTable.'` WHERE child = :name');
             $res->bindValue(':name', $name);
             $res->execute();
 
