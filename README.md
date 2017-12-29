@@ -15,7 +15,7 @@ Features
 
 Live demonstration
 --------------
-http://pexadmin.oxygen-framework.net
+https://oxygen-framework.net/demos/pexadmin
 
 Login: demo
 
