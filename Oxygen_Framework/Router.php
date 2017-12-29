@@ -16,6 +16,7 @@ class Router_Exception extends Exception {}
 class Router
 {
     protected $routes = array();
+    protected $basePath = '/';
 
     /**
      * Populate $request with controller and action names
@@ -30,7 +31,9 @@ class Router
         $controllerName = null;
         $actionName = null;
 
-        $request_uri = explode('?', $request->getUri());
+        $request_uri = explode('?', $request->getUri(true));
+        $this->basePath = $request->getApplicationPath();
+
         $uri = $request_uri[0];
 
         // Don't bother with the begining and last '/'
@@ -228,14 +231,14 @@ class Router
                     $explodedRoutePart = $explodedRoute[$i];
                     $explodedUriPart = isset($explodedUri[$i]) ? $explodedUri[$i] : '';
 
-                    if ($explodedRoutePart != $explodedUriPart && $explodedRoutePart[0] != ':')
+                    if ($explodedRoutePart != $explodedUriPart && (strlen($explodedRoutePart) == 0 || $explodedRoutePart[0] != ':'))
                     {
                         // Wrong route, remove params and treat next
                         $foundRoute = false;
                         $params = array();
                         break;
                     }
-                    else if ($explodedRoutePart[0] == ':')
+                    else if (strlen($explodedRoutePart) > 0 && $explodedRoutePart[0] == ':')
                     {
                         $paramName = substr($explodedRoutePart, 1);
 
@@ -291,12 +294,12 @@ class Router
                         : (isset($route['values'][$paramName]) ? $route['values'][$paramName] : null)
                     ;
                 },
-                $route['url']
+                ltrim($route['url'], '/')
             );
         }
         else
             throw new Router_Exception('Unknown route "'.$routeName.'"');
 
-        return '/'.$result;
+        return $this->basePath.'/'.$result;
     }
 }

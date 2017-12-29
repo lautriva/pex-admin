@@ -50,7 +50,11 @@
 
             foreach ($parents as $parent)
             {
-                $parentsDisp[] = '<a href="/groups/edit/'.$parent.'">'.$parent.'</a>';
+                $groupEditUrl = Oxygen_Utils::url('group-edit', [
+                    'name' => rawurlencode($parent)
+                ]);
+
+                $parentsDisp[] = '<a href="'.$groupEditUrl.'">'.$parent.'</a>';
             }
 
             echo implode(', ', $parentsDisp);
@@ -127,9 +131,13 @@
 
     echo ' ';
 
+    $entityEditUrl = Oxygen_Utils::url(($isPlayer ? 'player' : 'group').'-edit', [
+        'name' => rawurlencode($oEntity->getName())
+    ]);
+
     echo $form->getButton(
         'Go to entity options',
-        'window.location = "/'.($isPlayer ? 'players' : 'groups').'/edit/'.urlencode($oEntity->getName()).'"',
+        'window.location = "'.$entityEditUrl.'"',
         array(
             'class' => 'btn-secondary',
         )

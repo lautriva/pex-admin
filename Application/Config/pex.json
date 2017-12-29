@@ -8,7 +8,10 @@
 			"permissions_inheritance": "permissions_inheritance"
 		}
 	},
-	"plugins": ["PexAdmin_Plugins_Authentication"],
+	"plugins": [
+		"PexAdmin_Plugins_Mvc",
+		"PexAdmin_Plugins_Authentication"
+	],
     "router" :
     {
         "error" :

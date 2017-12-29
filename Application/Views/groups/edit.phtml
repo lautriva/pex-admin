@@ -43,7 +43,7 @@
 
         echo $form->getAjaxSelect(
             'parents',
-            '/groups/list-ajax',
+            Oxygen_Utils::url('group-list-ajax'),
             $parentsOptions,
             array(
                 'name' => 'parents[]',
@@ -143,11 +143,14 @@
                 );
             }
 
-            echo ' <img class="loader" style="display:none" src="/assets/img/loader.gif"/>';
+            echo ' <img class="loader" style="display:none" src="'.$this->basedir.'/assets/img/loader.gif"/>';
 
             echo $form->getButton(
                 'Go to group permissions',
-                'window.location = "/permissions/edit/'.urlencode($oGroup->getName()).'/0"',
+                'window.location = "'.Oxygen_Utils::url('permission-edit', [
+                    'name' => urlencode($oGroup->getName()),
+                    'type' => Model_Permission::TYPE_GROUP
+                ]).'"',
                 array(
                     'class' => 'btn-secondary',
                 )
@@ -223,13 +226,13 @@
 		if (confirm('Are you sure you want to delete this group ?'))
 		{
 			$('.loader').show();
-			$.post('/groups/delete/',
+			$.post('<?= Oxygen_Utils::url('group-delete') ?>',
 			{
 				name: $('#name').val()
 			},
 			function (data) {
 				if (data == '')
-					document.location = '/groups/';
+					document.location = '<?= Oxygen_Utils::url('group-index') ?>';
 				else
 				{
 					alert(data);
@@ -247,14 +250,14 @@
         {
         	$('.loader').show();
 
-			$.post('/groups/clone/',
+			$.post('<?= Oxygen_Utils::url('group-clone') ?>',
 			{
 				name: $('#name').val(),
 				newName: name
 			},
 			function (data) {
 				if (data == '')
-					document.location = '/groups/edit/'+name;
+					document.location = '<?= Oxygen_Utils::url('group-edit') ?>'+name;
 				else
 				{
 					alert(data);

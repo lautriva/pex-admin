@@ -5,7 +5,7 @@ class GroupsController extends Controller
     public function init()
     {
         if (!PexAdmin_Acl::isAllowed('GROUP', 'READ'))
-            Oxygen_Utils::redirect('/');
+            Oxygen_Utils::redirect(Oxygen_Utils::url('home'));
 
         $this->view->toolbarCurrent = 'groups';
     }
@@ -17,7 +17,7 @@ class GroupsController extends Controller
 
     public function editAction()
     {
-        $groupName = $this->getRequest()->getParam(0);
+        $groupName = $this->getRequest()->getParam('name');
         $groupName = rawurldecode($groupName);
 
         $oGroup = false;
@@ -26,15 +26,10 @@ class GroupsController extends Controller
         $canEdit = PexAdmin_Acl::isAllowed('GROUP', 'UPDATE');
 
         if (!empty($groupName))
-        {
             $oGroup = Model_PermissionsEntity::getEntityByName($groupName, Model_Permission::TYPE_GROUP);
 
-            if (!$oGroup)
-                Oxygen_Utils::redirect('/groups/edit/');
-        }
-
         if (!$oGroup && !$canCreate)
-            Oxygen_Utils::redirect('/groups/');
+            Oxygen_Utils::redirect(Oxygen_Utils::url('group-index'));
         else if(!$oGroup)
             $oGroup = new Model_PermissionsEntity();
 
@@ -44,7 +39,9 @@ class GroupsController extends Controller
         {
             $oGroup = Model_PermissionsEntity::setGroupData($_POST, $isCreate);
 
-            Oxygen_Utils::redirect('/groups/edit/'.rawurlencode($oGroup->getName()));
+            Oxygen_Utils::redirect(Oxygen_Utils::url('group-edit', [
+                'name' => rawurlencode($oGroup->getName())
+            ]));
         }
 
         $this->view->oGroup = $oGroup;
@@ -134,7 +131,9 @@ class GroupsController extends Controller
                 $parents = [];
 
                 foreach ($allParents[$groupName] as $parent)
-                    $parents[] = '<a href="/groups/edit/'.rawurlencode($parent).'">'.$parent.'</a>';
+                    $parents[] = '<a href="'.Oxygen_Utils::url('group-edit', [
+                        'name' => rawurlencode($parent)
+                    ]).'">'.$parent.'</a>';
 
                 $parents = implode(', ', $parents);
             }
@@ -150,7 +149,11 @@ class GroupsController extends Controller
                 $v = '<u>'.$k.'</u>: '.$v;
             });
 
-            $finalRow[] = '<a href="/groups/edit/'.rawurlencode($groupName).'">'.$groupName.'</a>';
+            $groupEditUrl = Oxygen_Utils::url('group-edit', [
+                'name' => rawurlencode($groupName)
+            ]);
+
+            $finalRow[] = '<a href="'.$groupEditUrl.'">'.$groupName.'</a>';
             $finalRow[] = !empty($options) ? implode('<br/>', $options) : '<i>No options</i>';
             $finalRow[] = $parents;
 

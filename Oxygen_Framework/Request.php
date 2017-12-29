@@ -12,9 +12,19 @@ class Request
         return $_SERVER['REQUEST_METHOD'] === 'POST';
     }
 
-    public function getUri()
+    public function getUri($getCanonical = false)
     {
-        return $_SERVER["REQUEST_URI"];
+        $result = $_SERVER["REQUEST_URI"];
+
+        if ($getCanonical)
+            $result = substr($result, strlen($this->getApplicationPath()));
+
+        return $result;
+    }
+
+    public function getApplicationPath()
+    {
+        return rtrim(str_replace('\\', '/', dirname($_SERVER['PHP_SELF'])), '/');
     }
 
     public function getControllerName()

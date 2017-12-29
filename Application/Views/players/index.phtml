@@ -1,7 +1,7 @@
 <?php
     $form = new PexAdmin_Form();
 ?>
-<link rel="stylesheet" href="/assets/lib/datatables/dataTables.bootstrap.css">
+<link rel="stylesheet" href="<?= $this->basedir ?>/assets/lib/datatables/dataTables.bootstrap.css">
 
 <div id="players-table-container">
     <table id="players-table" class="table table-bordered table-striped">
@@ -30,14 +30,14 @@ if (PexAdmin_Acl::isAllowed('PLAYER', 'CREATE'))
 {
     echo $form->getButton(
         'Add a new player',
-        'window.location = "/players/edit/"',
+        'window.location = "'.Oxygen_Utils::url('player-edit').'"',
         ['class' => 'btn-primary']
     );
 }
 ?>
 
-<script src="/assets/lib/datatables/jquery.dataTables.min.js"></script>
-<script src="/assets/lib/datatables/dataTables.bootstrap.min.js"></script>
+<script src="<?= $this->basedir ?>/assets/lib/datatables/jquery.dataTables.min.js"></script>
+<script src="<?= $this->basedir ?>/assets/lib/datatables/dataTables.bootstrap.min.js"></script>
 
 <script>
 $(function() {
@@ -53,7 +53,7 @@ $(function() {
       "responsive": true,
       "processing": true,
       "serverSide": true,
-      "ajax": "/players/list",
+      "ajax": "<?= Oxygen_Utils::url('player-list') ?>",
       "columnDefs": [
         { "orderable": false, "targets": [1, 2] }
       ]

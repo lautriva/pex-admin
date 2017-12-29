@@ -59,7 +59,7 @@
 
         echo $form->getAjaxSelect(
             'parents',
-            '/groups/list-ajax',
+            Oxygen_Utils::url('group-list-ajax'),
             $parentsOptions,
             array(
                 'name' => 'parents[]',
@@ -165,11 +165,14 @@
                 );
             }
 
-            echo ' <img class="loader" style="display:none" src="/assets/img/loader.gif"/>';
+            echo ' <img class="loader" style="display:none" src="'.$this->basedir.'/assets/img/loader.gif"/>';
 
             echo $form->getButton(
                 'Go to player permissions',
-                'window.location = "/permissions/edit/'.urlencode($playerUuid).'/1"',
+                'window.location = "'.Oxygen_Utils::url('permission-edit', [
+                    'name' => urlencode($oPlayer->getName()),
+                    'type' => Model_Permission::TYPE_PLAYER
+                ]).'"',
                 array(
                     'class' => 'btn-secondary',
                 )
@@ -246,13 +249,13 @@
 		if (confirm('Are you sure you want to remove this player ?'))
 		{
 			$('.loader').show();
-			$.post('/players/delete/',
+			$.post('<?= Oxygen_Utils::url('player-delete') ?>',
 			{
 				name: $('#name').val()
 			},
 			function (data) {
 				if (data == '')
-					document.location = '/players/';
+					document.location = '<?= Oxygen_Utils::url('player-index') ?>';
 				else
 				{
 					alert(data);
@@ -270,14 +273,14 @@
         {
         	$('.loader').show();
 
-			$.post('/players/clone/',
+			$.post('<?= Oxygen_Utils::url('player-clone') ?>',
 			{
 				name: $('#name').val(),
 				newName: name
 			},
 			function (data) {
 				if (data == '')
-					document.location = '/players/edit/'+name;
+					document.location = '<?= Oxygen_Utils::url('player-edit') ?>'+name;
 				else
 				{
 					alert(data);

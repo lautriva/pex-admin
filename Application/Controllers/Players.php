@@ -5,7 +5,7 @@ class PlayersController extends Controller
     public function init()
     {
         if (!PexAdmin_Acl::isAllowed('PLAYER', 'READ'))
-            Oxygen_Utils::redirect('/');
+            Oxygen_Utils::redirect(Oxygen_Utils::url('home'));
 
         $this->view->toolbarCurrent = 'players';
     }
@@ -17,7 +17,7 @@ class PlayersController extends Controller
 
     public function editAction()
     {
-        $playerName = $this->getRequest()->getParam(0);
+        $playerName = $this->getRequest()->getParam('name');
         $playerName = urldecode($playerName);
 
         $oPlayer = false;
@@ -26,15 +26,10 @@ class PlayersController extends Controller
         $canEdit = PexAdmin_Acl::isAllowed('PLAYER', 'UPDATE');
 
         if (!empty($playerName))
-        {
             $oPlayer = Model_PermissionsEntity::getEntityByName($playerName, Model_Permission::TYPE_PLAYER);
 
-            if (!$oPlayer)
-                $oPlayer = $oPlayer[0];
-        }
-
         if (!$oPlayer && !$canCreate)
-            Oxygen_Utils::redirect('/players/');
+            Oxygen_Utils::redirect(Oxygen_Utils::url('player-index'));
         else if (!$oPlayer)
             $oPlayer = new Model_PermissionsEntity();
 
@@ -44,7 +39,9 @@ class PlayersController extends Controller
         {
             $oPlayer = Model_PermissionsEntity::setGroupData($_POST, $isCreate, Model_Permission::TYPE_PLAYER);
 
-            Oxygen_Utils::redirect('/players/edit/'.urlencode($oPlayer->getName()));
+            Oxygen_Utils::redirect(Oxygen_Utils::url('player-edit', [
+                'name' => rawurlencode($oPlayer->getName())
+            ]));
         }
 
         $this->view->oPlayer = $oPlayer;
@@ -139,7 +136,9 @@ class PlayersController extends Controller
                 $parents = [];
 
                 foreach ($allParents[$playerUuid] as $parent)
-                    $parents[] = '<a href="/groups/edit/'.urlencode($parent).'">'.$parent.'</a>';
+                    $parents[] = '<a href="'.Oxygen_Utils::url('group-edit', [
+                        'name' => rawurlencode($parent)
+                    ]).'">'.$parent.'</a>';
 
                 $parents = implode(', ', $parents);
             }
@@ -160,9 +159,13 @@ class PlayersController extends Controller
                 $v = '<u>'.$k.'</u>: '.$v;
             });
 
+              $playerEditUrl = Oxygen_Utils::url('player-edit', [
+                'name' => rawurlencode($playerUuid)
+            ]);
+
             $tooltip = 'title="Last known playername: '.$playerName.'"';
 
-            $finalRow[] = '<a href="/players/edit/'.urlencode($playerUuid).'" '.$tooltip.'>'.$playerUuid.'</a>';
+            $finalRow[] = '<a href="'.$playerEditUrl.'" '.$tooltip.'>'.$playerUuid.'</a>';
             $finalRow[] = !empty($options) ? implode('<br/>', $options) : '<i>No options</i>';
             $finalRow[] = $parents;
 

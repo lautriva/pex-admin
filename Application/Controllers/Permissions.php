@@ -5,7 +5,7 @@ class PermissionsController extends Controller
     public function init()
     {
         if (!PexAdmin_Acl::isAllowed('PERMISSION', 'READ'))
-            Oxygen_Utils::redirect('/');
+            Oxygen_Utils::redirect(Oxygen_Utils::url('home'));
 
         $this->view->toolbarCurrent = 'permissions';
     }
@@ -17,8 +17,8 @@ class PermissionsController extends Controller
 
     public function editAction()
     {
-        $entityName = $this->getRequest()->getParam(0);
-        $entityType = $this->getRequest()->getParam(1, 0);
+        $entityName = $this->getRequest()->getParam('name');
+        $entityType = $this->getRequest()->getParam('type', 0);
 
         $canEdit = PexAdmin_Acl::isAllowed('PERMISSION', 'UPDATE');
 
@@ -27,7 +27,7 @@ class PermissionsController extends Controller
             $oEntity = Model_PermissionsEntity::getEntityByName($entityName, $entityType);
 
         if (!$oEntity)
-            Oxygen_Utils::redirect('/permissions/');
+            Oxygen_Utils::redirect(Oxygen_Utils::url('permission-index'));
 
         $permissions = !empty($_POST['permissions'])
             ? $_POST['permissions']
@@ -125,7 +125,12 @@ class PermissionsController extends Controller
                 : '<span class="fa fa-fw fa-users"></span>'
             ;
 
-            $finalRow[] = '<a href="/permissions/edit/'.$entityName.'/'.$entityType.'">'.$icon.$entityName.'</a>';
+            $permissionEditUrl = Oxygen_Utils::url('permission-edit', [
+                'name' => urlencode($entityName),
+                'type' => $entityType
+            ]);
+
+            $finalRow[] = '<a href="'.$permissionEditUrl.'">'.$icon.$entityName.'</a>';
             $finalRow[] = $entityType == 1 ? 'Player' : 'Group';
             $finalRow[] = $permissions;
 

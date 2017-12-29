@@ -4,7 +4,7 @@ class AuthenticationController extends Controller
     public function indexAction()
     {
         if (Oxygen_Auth::getIdentity())
-            Oxygen_Utils::redirect('/');
+            Oxygen_Utils::redirect(Oxygen_Utils::url('home'));
 
         if (!PexAdmin_Utils::checkState($error))
         {
@@ -88,6 +88,6 @@ class AuthenticationController extends Controller
             $session->destroy();
         }
 
-        Oxygen_Utils::redirect('/');
+        Oxygen_Utils::redirect(Oxygen_Utils::url('home'));
     }
 }

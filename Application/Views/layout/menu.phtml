@@ -5,25 +5,25 @@
 <nav class="navbar navbar-default navbar-static-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/">PEXAdmin</a>
+                <a class="navbar-brand" href="<?= $this->basedir ?>/">PEXAdmin</a>
             </div>
             <ul class="nav navbar-nav">
             <?= $this->toolbar(array(
                 'groups' => array(
                     'title' => 'Groups',
-                    'link' => '/groups'
+                    'link' => Oxygen_Utils::url('group-index')
                 ),
                 "players" => array(
                     'title' => 'Players',
-                    'link' => '/players'
+                    'link' => Oxygen_Utils::url('player-index')
                 ),
                 "permissions" => array(
                     'title' => 'Permissions',
-                    'link' => '/permissions'
+                    'link' => Oxygen_Utils::url('permission-index')
                 ),
                 "logout" => array(
                     'title' => 'Logout ['.ucfirst($login).']',
-                    'link' => '/authentication/logout'
+                    'link' => Oxygen_Utils::url('logout')
                 ),
             ), $this->toolbarCurrent)
             ?>
