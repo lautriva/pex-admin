@@ -10,10 +10,9 @@ foreach ($groups as $group) {
         : '<span class="fa fa-fw fa-users"></span>'
     ;
 
-    $link = $isPlayer
-        ? '/players/edit/'.urlencode($group['id'])
-        : '/groups/edit/'.urlencode($group['name'])
-    ;
+    $link = Oxygen_Utils::url(($isPlayer ? 'player' : 'group').'-edit', [
+        'name' => rawurlencode($group['id'])
+    ]);
 
 ?>
     <div class="row">

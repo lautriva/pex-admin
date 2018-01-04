@@ -52,6 +52,8 @@ class IndexController extends Controller
                 $currentPlayer %= $randomPlayerCount;
             }
 
+            $row['id'] = $row['name']; // To display edit page
+
             if ($group->getType() == Model_Permission::TYPE_GROUP)
             {
                 if (isset($options['']['rank']))
@@ -62,8 +64,6 @@ class IndexController extends Controller
             }
             else
             {
-                $row['id'] = $row['name']; // To display edit page
-
                 // Show player name with the uuid
                 if (isset($options['']['name']))
                 {
