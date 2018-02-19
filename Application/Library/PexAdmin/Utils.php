@@ -29,6 +29,32 @@ class PexAdmin_Utils
         return $result;
     }
 
+    /**
+     * Generate player UUID from name (to use in offline servers)
+     * @param string $playername
+     * @param bool $withHyphens
+     * @return string
+     *      The offline UUID of specified player
+     */
+    public static function generateOfflineUuid($playername, $withHyphens = true)
+    {
+        $result = md5("OfflinePlayer:".$playername);
+
+        $result[12] = '3';
+
+        if ($withHyphens)
+        {
+            $result = substr($result, 0, 8 ) .'-'.
+              substr($result, 8, 4) .'-'.
+              substr($result, 12, 4) .'-'.
+              substr($result, 16, 4) .'-'.
+              substr($result, 20)
+            ;
+        }
+
+        return $result;
+    }
+
     // Adapted from http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-tools/1264944
     public static function convertMinetextToWeb($minetext)
     {
@@ -47,103 +73,103 @@ class PexAdmin_Utils
                     switch ($actualcode)
                     {
                         case "1" :
-                            $returnstring = $returnstring . '<span style="color:#0000AA">';
+                            $returnstring .= '<span style="color:#0000AA">';
                             $ending = $ending . "</span>";
                             break;
                         case "2" :
-                            $returnstring = $returnstring . '<span style="color:#00AA00">';
+                            $returnstring .= '<span style="color:#00AA00">';
                             $ending = $ending . "</span>";
                             break;
                         case "3" :
-                            $returnstring = $returnstring . '<span style="color:#00AAAA">';
+                            $returnstring .= '<span style="color:#00AAAA">';
                             $ending = $ending . "</span>";
                             break;
                         case "4" :
-                            $returnstring = $returnstring . '<span style="color:#AA0000">';
+                            $returnstring .= '<span style="color:#AA0000">';
                             $ending = $ending . "</span>";
                             break;
                         case "5" :
-                            $returnstring = $returnstring . '<span style="color:#AA00AA">';
+                            $returnstring .= '<span style="color:#AA00AA">';
                             $ending = $ending . "</span>";
                             break;
                         case "6" :
-                            $returnstring = $returnstring . '<span style="color:#FFAA00">';
+                            $returnstring .= '<span style="color:#FFAA00">';
                             $ending = $ending . "</span>";
                             break;
                         case "7" :
-                            $returnstring = $returnstring . '<span style="color:#AAAAAA">';
+                            $returnstring .= '<span style="color:#AAAAAA">';
                             $ending = $ending . "</span>";
                             break;
                         case "8" :
-                            $returnstring = $returnstring . '<span style="color:#555555">';
+                            $returnstring .= '<span style="color:#555555">';
                             $ending = $ending . "</span>";
                             break;
                         case "9" :
-                            $returnstring = $returnstring . '<span style="color:#5555FF">';
+                            $returnstring .= '<span style="color:#5555FF">';
                             $ending = $ending . "</span>";
                             break;
                         case "a" :
-                            $returnstring = $returnstring . '<span style="color:#55FF55">';
+                            $returnstring .= '<span style="color:#55FF55">';
                             $ending = $ending . "</span>";
                             break;
                         case "b" :
-                            $returnstring = $returnstring . '<span style="color:#55FFFF">';
+                            $returnstring .= '<span style="color:#55FFFF">';
                             $ending = $ending . "</span>";
                             break;
                         case "c" :
-                            $returnstring = $returnstring . '<span style="color:#FF5555">';
+                            $returnstring .= '<span style="color:#FF5555">';
                             $ending = $ending . "</span>";
                             break;
                         case "d" :
-                            $returnstring = $returnstring . '<span style="color:#FF55FF">';
+                            $returnstring .= '<span style="color:#FF55FF">';
                             $ending = $ending . "</span>";
                             break;
                         case "e" :
-                            $returnstring = $returnstring . '<span style="color:#FFFF55">';
+                            $returnstring .= '<span style="color:#FFFF55">';
                             $ending = $ending . "</span>";
                             break;
                         case "f" :
-                            $returnstring = $returnstring . '<span style="color:#FFFFFF">';
+                            $returnstring .= '<span style="color:#FFFFFF">';
                             $ending = $ending . "</span>";
                             break;
                         case "l" :
                             if (strlen ($individual) > 2) {
-                                $returnstring = $returnstring . '<span style="font-weight:bold;">';
+                                $returnstring .= '<span style="font-weight:bold;">';
                                 $ending = "</span>" . $ending;
                                 break;
                             }
                         case "m" :
                             if (strlen ($individual) > 2) {
-                                $returnstring = $returnstring . '<strike>';
+                                $returnstring .= '<strike>';
                                 $ending = "</strike>" . $ending;
                                 break;
                             }
                         case "n" :
                             if (strlen ($individual) > 2) {
-                                $returnstring = $returnstring . '<span style="text-decoration: underline;">';
+                                $returnstring .= '<span style="text-decoration: underline;">';
                                 $ending = "</span>" . $ending;
                                 break;
                             }
                         case "o" :
                             if (strlen ($individual) > 2) {
-                                $returnstring = $returnstring . '<i>';
+                                $returnstring .= '<i>';
                                 $ending = "</i>" . $ending;
                                 break;
                             }
                         case "r" :
-                            $returnstring = $returnstring . $ending;
+                            $returnstring .= $ending;
                             $ending = '';
                             break;
                     }
                     if (isset ($code [1])) {
-                        $returnstring = $returnstring . $code [1];
+                        $returnstring .= $code [1];
                         if (isset ($ending) && strlen ($individual) > 2) {
-                            $returnstring = $returnstring . $ending;
+                            $returnstring .= $ending;
                             $ending = '';
                         }
                     }
                 } else {
-                    $returnstring = $returnstring . $individual;
+                    $returnstring .= $individual;
                 }
             }
         }
