@@ -116,3 +116,25 @@ $router->addRoute('permission-edit', array(
         'action' => 'edit'
     )
 );
+
+// Tools routes
+$router->addRoute('tools-index', array(
+        'url' => 'tools/index/',
+        'controller' => 'tools',
+        'action' => 'index'
+    )
+);
+
+$router->addRoute('get-offline-uuid', array(
+        'url' => 'tools/generate-uuid/:name',
+        'controller' => 'tools',
+        'action' => 'generate-uuid'
+    )
+);
+
+$router->addRoute('get-mojang-uuid', array(
+        'url' => 'tools/get-uuid/:name',
+        'controller' => 'tools',
+        'action' => 'get-mojang-uuid'
+    )
+);

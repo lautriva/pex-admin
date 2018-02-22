@@ -30,11 +30,60 @@ class PexAdmin_Utils
     }
 
     /**
+     * Get Mojang player UUID from name
+     * @param string $playername
+     * @param bool $withHyphens
+     * @return string
+     *      The official UUID of the specified player
+     */
+    public static function getMojangUuid($playername, $withHyphens = true)
+    {
+        $error = false;
+        $result = false;
+
+        $session = Oxygen_Session::getInstance();
+        $cachedUuids = $session->uuids;
+
+        if (!isset($cachedUuids[$playername]))
+        {
+            try {
+                $content = file_get_contents('https://api.mojang.com/users/profiles/minecraft/'.$playername);
+
+                $response = @json_decode($content, true);
+
+                if (!empty($content) && json_last_error() == 0)
+                    $cachedUuids[$playername] = $response['id'];
+                else if (empty($content))
+                    $cachedUuids[$playername] = false;
+                else
+                {
+                    $result = 'Mojang error (malformed response)';
+                    $error = true;
+                }
+
+                if (isset($cachedUuids[$playername]))
+                    $result = $cachedUuids[$playername];
+
+                $session->uuids = $cachedUuids;
+            } catch (Exception $e) {}
+        }
+        else
+            $result = $cachedUuids[$playername];
+
+        if (!$result)
+            $result = 'Player not found!';
+        else if (!$error && $withHyphens)
+            $result = self::addHyphens($result);
+
+        return $result;
+    }
+
+    /**
      * Generate player UUID from name (to use in offline servers)
      * @param string $playername
      * @param bool $withHyphens
      * @return string
-     *      The offline UUID of specified player
+     *      The offline UUID of the specified player
      */
     public static function generateOfflineUuid($playername, $withHyphens = true)
     {
@@ -43,14 +92,27 @@ class PexAdmin_Utils
         $result[12] = '3';
 
         if ($withHyphens)
-        {
-            $result = substr($result, 0, 8 ) .'-'.
-              substr($result, 8, 4) .'-'.
-              substr($result, 12, 4) .'-'.
-              substr($result, 16, 4) .'-'.
-              substr($result, 20)
-            ;
-        }
+            $result = self::addHyphens($result);
+
+        return $result;
+    }
+
+    /**
+     * Hyphenize a provided UUID
+     * @param string $uuid
+     * @return string
+     *      The hyphened UUID
+     */
+    public static function addHyphens($uuid)
+    {
+        $result = $uuid;
+
+        $result = substr($result, 0, 8 ) .'-'.
+          substr($result, 8, 4) .'-'.
+          substr($result, 12, 4) .'-'.
+          substr($result, 16, 4) .'-'.
+          substr($result, 20)
+        ;
 
         return $result;
     }
