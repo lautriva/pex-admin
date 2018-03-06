@@ -1,13 +1,4 @@
 {
-	"application" :
-	{
-		"table_aliases" :
-		{
-			"permissions": "permissions",
-			"permissions_entity": "permissions_entity",
-			"permissions_inheritance": "permissions_inheritance"
-		}
-	},
 	"plugins": [
 		"PexAdmin_Plugins_Mvc",
 		"PexAdmin_Plugins_Authentication"

@@ -10,7 +10,7 @@ define('APPLICATION_DIR', dirname(__DIR__).'/Application');
 // Create the project instance
 $project = Project::create(
     APPLICATION_DIR,
-    Config::getArrayFromJSONFile(APPLICATION_DIR.'/Config/pex.json')
+    Config::getArrayFromJSONFile(APPLICATION_DIR.'/Config/application.json')
 );
 
 // Load Db adapters

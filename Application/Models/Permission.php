@@ -12,7 +12,7 @@ class Model_Permission extends Model_Generated_Permission
     public static function getTableName($originalName)
     {
         $config = Config::getInstance();
-        return $config->getOption('application/table_aliases/'.$originalName, $originalName);
+        return $config->getOption('table_aliases/'.$originalName, $originalName);
     }
 
     public static function getPermissions($name, $type)

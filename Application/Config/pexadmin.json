@@ -1,0 +1,8 @@
+{
+	"table_aliases" :
+	{
+		"permissions": "permissions",
+		"permissions_entity": "permissions_entity",
+		"permissions_inheritance": "permissions_inheritance"
+	}
+}
