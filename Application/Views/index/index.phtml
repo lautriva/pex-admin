@@ -1,4 +1,5 @@
 <hr/>
+<script type="text/javascript" src="<?= $this->basedir ?>/assets/lib/minecraft/obfuscate.js"></script>
 <?php
 $groups = $this->pexData;
 
@@ -23,7 +24,7 @@ foreach ($groups as $group) {
         echo ' <span class="text-muted" style="font-size:0.7em;">('.htmlentities($group['uuid']).')</span>';
 
 	if (!empty($group['render']))
-        echo ' <span class="text-muted" style="font-size:0.7em;">Chat preview: <span class="chat-preview">'.$group['render'].'</span></span>';
+        echo ' <span class="text-muted" style="font-size:0.7em;"><span class="chat-preview">'.$group['render'].'</span></span>';
 
     if (!empty($group['rank']))
         echo ' <span class="text-muted" style="font-size:0.9em;">#' . htmlentities($group['rank']) .
