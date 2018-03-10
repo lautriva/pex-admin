@@ -138,3 +138,10 @@ $router->addRoute('get-mojang-uuid', array(
         'action' => 'get-mojang-uuid'
     )
 );
+
+$router->addRoute('preview-chat', array(
+        'url' => 'tools/preview-chat',
+        'controller' => 'tools',
+        'action' => 'preview-chat'
+    )
+);

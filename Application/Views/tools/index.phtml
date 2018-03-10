@@ -1,0 +1,119 @@
+<?php
+    $form = new PexAdmin_Form();
+    $chatDefaultSentence = '&9PEXAdmin &3&o&nis&r &2c&co&9o&el';
+?>
+<script type="text/javascript" src="<?= $this->basedir ?>/assets/lib/minecraft/obfuscate.js"></script>
+<style>
+.uuid
+{
+    font-family: consolas;
+}
+</style>
+
+<div class="col-md-4">
+    <h2>Generate player UUIDs</h2>
+    <div class="row">
+    	<div class="col-md-11">
+    		<?= $form->getInput('playername', 'text', [
+                'caption' => 'Player name'
+            ]); ?>
+    	</div>
+    </div>
+    <div class="row">
+    	<div class="col-md-11">
+    		<?= $form->getInput('online-uuid', 'text', [
+                'readonly' => true,
+		        'caption' => 'Official Mojang UUID',
+		        'placeholder' => 'Here will goes the official player UUID',
+		        'class' => 'uuid'
+            ]); ?>
+    	</div>
+    </div>
+
+    <div class="row">
+    	<div class="col-md-11">
+    		<?= $form->getInput('offline-uuid', 'text', [
+                'readonly' => true,
+		        'caption' => 'Offline UUID',
+		        'placeholder' => 'Here will goes the \'cracked\' player UUID',
+                'class' => 'uuid'
+            ]); ?>
+    	</div>
+    </div>
+
+    <div class="row">
+    	<div class="col-md-1">
+            <?= $form->getButton(
+                'Get the player UUIDs',
+                'getUUID()',
+                array(
+                    'class' => 'btn-default'
+                )
+            ) ?>
+    	</div>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <h2>Minecraft chat preview</h2>
+    <div class="row">
+    	<div class="col-md-12">
+    		<?= $form->getInput('chat_input', 'text', [
+                'caption' => 'Message / prefix with &-style formatting',
+                'value' => $chatDefaultSentence
+            ]); ?>
+    	</div>
+
+    	<div class="col-md-12">
+        	<div id="chat_preview" class="chat-preview">
+        		&nbsp;
+        	</div>
+    	</div>
+    </div>
+</div>
+
+<script>
+function getUUID()
+{
+	var playername = $('#playername').val();
+
+	$('#online-uuid').val('Loading...');
+	$('#offline-uuid').val('Loading...');
+
+	// First generate the offline UUID
+	$.get('<?= Oxygen_Utils::url('get-offline-uuid') ?>' + playername,
+	function (data) {
+		$('#offline-uuid').val(data);
+	});
+
+	// Then fetch the Mojang UUID
+	$.get('<?= Oxygen_Utils::url('get-mojang-uuid') ?>' + playername,
+	function (data) {
+		$('#online-uuid').val(data);
+	});
+}
+
+function update_preview()
+{
+	$.post(
+		'<?= Oxygen_Utils::url('preview-chat') ?>',
+		{text: $('#chat_input').val()},
+    	function (data) {
+    		$('#chat_preview').html(data);
+		}
+	);
+}
+
+$(function() {
+	$( "#playername" ).keypress(function( event ) {
+    	if ( event.which == 13 ) {
+           getUUID();
+      	}
+    });
+
+	$( "#chat_input" ).keyup(update_preview);
+
+	update_preview();
+});
+
+</script>

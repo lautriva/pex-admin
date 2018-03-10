@@ -1,3 +1,5 @@
+@import url("../lib/minecraft/font.css");
+
 #content
 {    
     padding: 20px;
@@ -11,11 +13,35 @@
 
 .chat-preview
 {
-    color:#eee;
-    font-family: consolas;
+    color:#fff;
+	text-shadow: 1px 1px 0 #3f3f3f;
+    
+    font-family: Minecraft, consolas;
     background: #777;
     padding: 3px;
     border-radius:5px;
+    cursor: default;
+    font-size: 16px;
+}
+
+.bold
+{
+	font-weight:bold;
+}
+
+.strike
+{
+	text-decoration: line-through;
+}
+
+.underline
+{
+	text-decoration: underline;
+}
+
+.italic
+{
+	font-style: italic;
 }
 
 .select2-results__option[aria-selected=true] {

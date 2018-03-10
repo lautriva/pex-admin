@@ -120,6 +120,33 @@ class PexAdmin_Utils
     // Adapted from http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-tools/1264944
     public static function convertMinetextToWeb($minetext)
     {
+        $colors = [
+            '0' => 'black',
+            '1' => 'dark-blue',
+            '2' => 'dark-green',
+            '3' => 'dark-aqua',
+            '4' => 'dark-red',
+            '5' => 'dark-purple',
+            '6' => 'gold',
+            '7' => 'gray',
+            '8' => 'dark-gray',
+            '9' => 'blue',
+            'a' => 'green',
+            'b' => 'aqua',
+            'c' => 'red',
+            'd' => 'light-purple',
+            'e' => 'yellow',
+            'f' => 'white',
+        ];
+
+        $formats = [
+            'k' => 'obfuscated',
+            'l' => 'bold',
+            'm' => 'strike',
+            'n' => 'underline',
+            'o' => 'italic',
+        ];
+
         preg_match_all ("/[^§&]*[^§&]|[§&][0-9a-z][^§&]*/", $minetext, $brokenupstrings);
         $returnstring = "";
         foreach ($brokenupstrings as $results)
@@ -127,101 +154,21 @@ class PexAdmin_Utils
             $ending = '';
             foreach ($results as $individual)
             {
-                $code = preg_split ("/[&§][0-9a-z]/", $individual);
-                preg_match ("/[&§][0-9a-z]/", $individual, $prefix);
-                if (isset ($prefix [0]))
+                $code = preg_split("/[&§][0-9a-z]/", $individual);
+                preg_match("/[&§][0-9a-z]/", $individual, $prefix);
+                if (isset ($prefix[0]))
                 {
-                    $actualcode = substr ($prefix [0], 1);
-                    switch ($actualcode)
+                    $actualcode = substr($prefix[0], 1);
+
+                    if (isset($colors[$actualcode]))
                     {
-                        case "1" :
-                            $returnstring .= '<span style="color:#0000AA">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "2" :
-                            $returnstring .= '<span style="color:#00AA00">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "3" :
-                            $returnstring .= '<span style="color:#00AAAA">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "4" :
-                            $returnstring .= '<span style="color:#AA0000">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "5" :
-                            $returnstring .= '<span style="color:#AA00AA">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "6" :
-                            $returnstring .= '<span style="color:#FFAA00">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "7" :
-                            $returnstring .= '<span style="color:#AAAAAA">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "8" :
-                            $returnstring .= '<span style="color:#555555">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "9" :
-                            $returnstring .= '<span style="color:#5555FF">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "a" :
-                            $returnstring .= '<span style="color:#55FF55">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "b" :
-                            $returnstring .= '<span style="color:#55FFFF">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "c" :
-                            $returnstring .= '<span style="color:#FF5555">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "d" :
-                            $returnstring .= '<span style="color:#FF55FF">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "e" :
-                            $returnstring .= '<span style="color:#FFFF55">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "f" :
-                            $returnstring .= '<span style="color:#FFFFFF">';
-                            $ending = $ending . "</span>";
-                            break;
-                        case "l" :
-                            if (strlen ($individual) > 2) {
-                                $returnstring .= '<span style="font-weight:bold;">';
-                                $ending = "</span>" . $ending;
-                                break;
-                            }
-                        case "m" :
-                            if (strlen ($individual) > 2) {
-                                $returnstring .= '<strike>';
-                                $ending = "</strike>" . $ending;
-                                break;
-                            }
-                        case "n" :
-                            if (strlen ($individual) > 2) {
-                                $returnstring .= '<span style="text-decoration: underline;">';
-                                $ending = "</span>" . $ending;
-                                break;
-                            }
-                        case "o" :
-                            if (strlen ($individual) > 2) {
-                                $returnstring .= '<i>';
-                                $ending = "</i>" . $ending;
-                                break;
-                            }
-                        case "r" :
-                            $returnstring .= $ending;
-                            $ending = '';
-                            break;
+                        $returnstring .= '<span class="mc-'.$colors[$actualcode].'">';
+                        $ending .= '</span>';
+                    }
+                    else if (isset($formats[$actualcode]))
+                    {
+                        $returnstring .= '<span class="'.$formats[$actualcode].'">';
+                        $ending = '</span>' . $ending;
                     }
                     if (isset ($code [1])) {
                         $returnstring .= $code [1];

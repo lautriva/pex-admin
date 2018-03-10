@@ -23,7 +23,8 @@
                 ),
                 "tools" => array(
                     'title' => 'Tools',
-                    'link' => Oxygen_Utils::url('tools-index')
+                    'link' => Oxygen_Utils::url('tools-index'),
+                    'display_condition' => PexAdmin_Acl::isAllowed('TOOLS', 'MANAGE')
                 ),
                 "logout" => array(
                     'title' => 'Logout ['.ucfirst($login).']',

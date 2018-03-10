@@ -24,15 +24,16 @@ class PexAdmin_Acl
      * @param string $privilege (CREATE, READ, UPDATE, DELETE)
      * @return boolean
      */
-    public static function isAllowed($ressource, $privilege)
+    public static function isAllowed($ressource, $privilege = '')
     {
-        $result = false;
-
         $userData = Oxygen_Auth::getIdentity();
+
+        $result = false;
+        $hasWritingRole = !empty($userData['role']) && $userData['role'] == 'write';
 
         if ($privilege == 'READ')
             $result = true;
-        else if (!empty($userData['role']) && $userData['role'] == 'write')
+        else if ($hasWritingRole)
             $result = true;
 
         return $result;
