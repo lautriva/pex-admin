@@ -1,3 +1,9 @@
+## Project abandoned
+
+As I stopped to play Minecraft and anything about Java development, This plugin is now archived
+
+-------------
+
 PEXAdmin
 ===========
 
